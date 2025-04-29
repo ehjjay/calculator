@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discount Calculator</title>
   <!-- Import Inter font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary-color: #4CAF50;
-      --bg-color: #f0f2f5;
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4cc9f0;
+      --success-color: #4ade80;
+      --danger-color: #f87171;
+      --bg-color: #f8fafc;
       --card-bg: #ffffff;
+      --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       --font-family: 'Inter', sans-serif;
-      --border-radius: 12px;
+      --border-radius: 16px;
       --transition-speed: 0.3s;
-      --base-font-size: 18px;
+      --base-font-size: 16px;
+      --text-color: #334155;
+      --light-text: #64748b;
     }
     * {
       box-sizing: border-box;
@@ -26,116 +33,389 @@
     }
     body {
       background-color: var(--bg-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       font-family: var(--font-family);
-      padding: 1rem;
+      color: var(--text-color);
+      padding: 2rem 1rem;
+      min-height: 100vh;
     }
-    .calculator {
-      background-color: var(--card-bg);
-      padding: 2.5rem;
-      max-width: 400px;
-      width: 100%;
-      border-radius: var(--border-radius);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      transition: transform var(--transition-speed);
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
     }
-    .calculator:hover {
-      transform: translateY(-4px);
-    }
-    h2 {
+    .app-title {
       text-align: center;
-      font-size: 1.75rem;
-      font-weight: 600;
+      font-size: 2rem;
+      font-weight: 700;
       color: var(--primary-color);
+      margin-bottom: 2rem;
     }
-    .field {
+    .cards-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .card-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1.25rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card-header svg {
+      width: 24px;
+      height: 24px;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+    .input-group {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      margin-bottom: 1.25rem;
     }
-    label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #333;
+    .input-group:last-of-type {
+      margin-bottom: 1.5rem;
     }
-    input {
-      padding: 1rem;
-      font-size: 1.125rem;
-      border: 1px solid #ccc;
+    .input-group label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--light-text);
+      margin-bottom: 0.5rem;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-wrapper input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      border: 1px solid #e2e8f0;
       border-radius: var(--border-radius);
-      transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+      font-size: 1rem;
+      transition: all var(--transition-speed);
     }
-    input:focus {
+    .input-wrapper .currency-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--light-text);
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .input-wrapper input:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
     }
     .actions {
       display: flex;
       gap: 1rem;
-      margin-top: 1rem;
     }
-    button {
+    .btn {
       flex: 1;
-      padding: 1rem;
-      font-size: 1.125rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
       font-weight: 600;
       border: none;
       border-radius: var(--border-radius);
-      background: var(--primary-color);
-      color: #fff;
       cursor: pointer;
-      transition: background-color var(--transition-speed), transform var(--transition-speed);
+      transition: all var(--transition-speed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
-    button:disabled {
-      background-color: #a5d6a7;
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    .btn-primary:disabled {
+      background-color: #a5b4fc;
       cursor: not-allowed;
-      transform: none;
     }
-    button:not(:disabled):hover {
-      background-color: #43a047;
+    .btn-primary:not(:disabled):hover {
+      background-color: var(--secondary-color);
       transform: translateY(-2px);
     }
-    .result {
-      margin-top: 1rem;
-      font-size: 1.125rem;
-      text-align: center;
-      min-height: 2em;
-      color: #333;
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #e2e8f0;
+      color: var(--light-text);
+    }
+    .btn-outline:hover {
+      background-color: #f1f5f9;
+      color: var(--text-color);
+    }
+    .result-card {
+      margin-top: 1.5rem;
+      background-color: #f8fafc;
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      display: none;
+    }
+    .result-card.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+    .result-title {
+      font-size: 0.875rem;
+      color: var(--light-text);
+      margin-bottom: 0.5rem;
       font-weight: 500;
     }
-    @media (max-width: 420px) {
-      .calculator {
-        padding: 2rem;
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .result-row:last-child {
+      border-bottom: none;
+    }
+    .result-label {
+      font-weight: 500;
+    }
+    .result-value {
+      font-weight: 600;
+    }
+    .result-value.highlight {
+      color: var(--primary-color);
+      font-size: 1.125rem;
+    }
+    .history-card .card-body {
+      padding: 0;
+    }
+    .history-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .history-title {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .history-clear {
+      background: none;
+      border: none;
+      color: var(--danger-color);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .history-list {
+      list-style: none;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    .history-item {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      transition: background-color var(--transition-speed);
+    }
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    .history-item:hover {
+      background-color: #f1f5f9;
+    }
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .history-date {
+      font-size: 0.75rem;
+      color: var(--light-text);
+    }
+    .history-bottom {
+      display: flex;
+      justify-content: space-between;
+    }
+    .history-amount {
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    .history-discount {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .history-badge {
+      background-color: rgba(76, 201, 240, 0.2);
+      color: var(--accent-color);
+      border-radius: 12px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .no-history {
+      padding: 2rem;
+      text-align: center;
+      color: var(--light-text);
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
       }
-      button, input {
-        font-size: 1rem;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+    .empty-icon {
+      width: 60px;
+      height: 60px;
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+    }
+    .empty-text {
+      color: var(--light-text);
+      font-size: 0.875rem;
+      max-width: 250px;
+    }
+    @media (min-width: 768px) {
+      .cards-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 767px) {
+      .card {
+        margin-bottom: 1.5rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="calculator">
-    <h2>Discount Calculator</h2>
-    <div class="field">
-      <label for="originalPrice">Original Price (AED)</label>
-      <input type="number" id="originalPrice" placeholder="e.g. 117.00" min="0" step="0.01" />
+  <div class="container">
+    <h1 class="app-title">Discount Calculator</h1>
+    
+    <div class="cards-container">
+      <div class="calculator-section">
+        <div class="card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            Calculate Discount
+          </div>
+          <div class="card-body">
+            <div class="input-group">
+              <label for="originalPrice">Original Price</label>
+              <div class="input-wrapper">
+                <span class="currency-icon">AED</span>
+                <input
+                  type="number"
+                  id="originalPrice"
+                  placeholder="e.g. 117.00"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="newPrice">Price After Discount</label>
+              <div class="input-wrapper">
+                <span class="currency-icon">AED</span>
+                <input
+                  type="number"
+                  id="newPrice"
+                  placeholder="e.g. 111.15"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+            </div>
+            <div class="actions">
+              <button id="calculateBtn" class="btn btn-primary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Calculate
+              </button>
+              <button id="clearBtn" class="btn btn-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Clear
+              </button>
+            </div>
+
+            <div id="result-card" class="result-card">
+              <p class="result-title">Your Savings</p>
+              <div class="result-row">
+                <span class="result-label">Original price:</span>
+                <span class="result-value" id="result-original">AED 117.00</span>
+              </div>
+              <div class="result-row">
+                <span class="result-label">Final price:</span>
+                <span class="result-value" id="result-final">AED 111.15</span>
+              </div>
+              <div class="result-row">
+                <span class="result-label">Amount saved:</span>
+                <span class="result-value" id="result-saved">AED 5.85</span>
+              </div>
+              <div class="result-row">
+                <span class="result-label">Discount rate:</span>
+                <span class="result-value highlight" id="result-rate">5.00%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="history-section">
+        <div class="card history-card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Recent Calculations
+          </div>
+          <div class="history-header">
+            <span class="history-title">Last 5 Entries</span>
+            <button id="clearHistoryBtn" class="history-clear">Clear All</button>
+          </div>
+          <div class="card-body">
+            <ul id="historyList" class="history-list"></ul>
+            <div id="emptyState" class="empty-state">
+              <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <p class="empty-text">No calculation history yet. Calculate a discount to see your history here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="field">
-      <label for="newPrice">Price After Discount (AED)</label>
-      <input type="number" id="newPrice" placeholder="e.g. 111.15" min="0" step="0.01" />
-    </div>
-    <div class="actions">
-      <button id="calculateBtn" disabled>Calculate</button>
-      <button id="clearBtn" type="button">Clear</button>
-    </div>
-    <div class="result" id="result"></div>
   </div>
 
   <script>
@@ -143,13 +423,90 @@
     const newInput = document.getElementById('newPrice');
     const calcBtn = document.getElementById('calculateBtn');
     const clearBtn = document.getElementById('clearBtn');
-    const resultDiv = document.getElementById('result');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    const resultCard = document.getElementById('result-card');
+    const resultOriginal = document.getElementById('result-original');
+    const resultFinal = document.getElementById('result-final');
+    const resultSaved = document.getElementById('result-saved');
+    const resultRate = document.getElementById('result-rate');
+    const historyList = document.getElementById('historyList');
+    const emptyState = document.getElementById('emptyState');
+
+    // Format currency
+    function formatCurrency(value) {
+      return `AED ${parseFloat(value).toFixed(2)}`;
+    }
+
+    // Format date
+    function formatDate(date) {
+      return new Date(date).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      });
+    }
+
+    // Load history from localStorage
+    function loadHistory() {
+      const data = localStorage.getItem('discountHistory');
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveHistory(history) {
+      localStorage.setItem('discountHistory', JSON.stringify(history));
+    }
+
+    function renderHistory() {
+      const history = loadHistory();
+      historyList.innerHTML = '';
+      
+      if (history.length === 0) {
+        emptyState.style.display = 'flex';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      
+      history.forEach(entry => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = `
+          <div class="history-top">
+            <span class="history-date">${formatDate(entry.date || new Date())}</span>
+          </div>
+          <div class="history-bottom">
+            <span class="history-amount">${formatCurrency(entry.orig)} → ${formatCurrency(entry.after)}</span>
+            <div class="history-discount">
+              <span>Saved: ${formatCurrency(entry.saved)}</span>
+              <span class="history-badge">${entry.rate.toFixed(2)}%</span>
+            </div>
+          </div>
+        `;
+        historyList.appendChild(li);
+      });
+    }
+
+    function addToHistory(orig, after, saved, rate) {
+      const history = loadHistory();
+      history.unshift({ 
+        orig, 
+        after, 
+        saved, 
+        rate,
+        date: new Date().toISOString()  
+      });
+      
+      if (history.length > 5) history.pop();
+      saveHistory(history);
+      renderHistory();
+    }
 
     function validate() {
       const orig = parseFloat(origInput.value);
       const after = parseFloat(newInput.value);
       calcBtn.disabled = !(orig > 0 && after >= 0 && after <= orig);
-      if (resultDiv.textContent) resultDiv.textContent = '';
+      resultCard.classList.remove('active');
     }
 
     origInput.addEventListener('input', validate);
@@ -160,18 +517,34 @@
       const after = parseFloat(newInput.value);
       const discountAmount = orig - after;
       const discountPercent = (discountAmount / orig) * 100;
-      resultDiv.innerHTML = 
-        `<strong>Saved:</strong> AED ${discountAmount.toFixed(2)} &nbsp;|&nbsp;` +
-        `<strong>Rate:</strong> ${discountPercent.toFixed(2)}%`;
+      
+      resultOriginal.textContent = formatCurrency(orig);
+      resultFinal.textContent = formatCurrency(after);
+      resultSaved.textContent = formatCurrency(discountAmount);
+      resultRate.textContent = `${discountPercent.toFixed(2)}%`;
+      
+      resultCard.classList.add('active');
+      
+      addToHistory(orig, after, discountAmount, discountPercent);
     });
 
     clearBtn.addEventListener('click', () => {
       origInput.value = '';
       newInput.value = '';
-      resultDiv.textContent = '';
+      resultCard.classList.remove('active');
       calcBtn.disabled = true;
       origInput.focus();
     });
+
+    clearHistoryBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all calculation history?')) {
+        localStorage.removeItem('discountHistory');
+        renderHistory();
+      }
+    });
+
+    // Initial render
+    renderHistory();
   </script>
 </body>
 </html>
